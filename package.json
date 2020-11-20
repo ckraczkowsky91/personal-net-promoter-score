@@ -1,0 +1,15 @@
+{
+  "name": "personal-net-promoter-score",
+  "description": "A Node.js application running a GraphQL/Express API server and a React.js frontend using the Material-UI library."
+  "version": "0.1.0",
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.3.0",
+    "mongoose": "^5.10.0"
+  }
+}
