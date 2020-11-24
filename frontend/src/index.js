@@ -1,20 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import {
+  BrowserRouter,
+  Link,
+  Redirect,
+  Route,
+  Switch,
+  useHistory
+} from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { withStyles } from '@material-ui/styles';
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Toolbar
+} from '@material-ui/core';
+import { ChatBubble as HomeIcon } from '@material-ui/icons';
 
 import Form from './Components/Form';
 import Admin from './Components/Admin';
+import Login from './Components/Login';
+import { authContext, useAuth } from './Components/utils';
 
 const apolloClient = new ApolloClient({
   uri: 'http://localhost:4001/graphql',
   cache: new InMemoryCache()
 });
 
+/*
+  Components
+*/
+
 function App(){
   return(
     <ApolloProvider client={apolloClient}>
-      <Form />
+      <ProvideAuth>
+      <BrowserRouter>
+      <AppBar color="transparent" position="sticky" style={{boxShadow: 'none'}}>
+      <Toolbar>
+        <IconButton edge="start" component={Link} to="/">
+            <HomeIcon />
+        </IconButton>
+        <Button component={Link} to="/admin">
+          Admin
+        </Button>
+        <AuthButton />
+      </Toolbar>
+      </AppBar>
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <PrivateRoute path="/admin">
+          <Admin />
+        </PrivateRoute>
+        <Route path="/">
+          <Form />
+        </Route>
+      </Switch>
+      </BrowserRouter>
+</ProvideAuth>
       <a
         href="https://github.com/ckraczkowsky91"
         style={{
@@ -23,14 +68,95 @@ function App(){
           fontFamily: "'Alata', sans-serif",
           fontSize: '1.5rem',
           left: '50%',
-          marginBottom: '8px',
           opacity: 0.5,
           position: 'fixed',
           textDecoration: 'none',
           transform: 'translate(-50%, 0)'
         }}>© Colin Kraczkowsky</a>
-        <Admin />
     </ApolloProvider>
+  );
+};
+
+const fakeAuth = {
+  isAuthenticated: false,
+  signin(cb) {
+    fakeAuth.isAuthenticated = true;
+    setTimeout(cb, 10); // fake async
+  },
+  signout(cb) {
+    fakeAuth.isAuthenticated = false;
+    setTimeout(cb, 10);
+  }
+};
+
+function ProvideAuth({ children }) {
+  const auth = useProvideAuth();
+  return (
+    <authContext.Provider value={auth}>
+      {children}
+    </authContext.Provider>
+  );
+};
+
+function useProvideAuth() {
+  const [user, setUser] = useState(null);
+
+  const signin = (authenticate) => {
+    return fakeAuth.signin(() => {
+      setUser("user");
+      authenticate();
+    });
+  };
+
+  const signout = (authenticate) => {
+    return fakeAuth.signout(() => {
+      setUser(null);
+      authenticate();
+    });
+  };
+
+  return {
+    user,
+    signin,
+    signout
+  };
+}
+
+function AuthButton() {
+  let history = useHistory();
+  let auth = useAuth();
+
+  return auth.user ? (
+    <Button
+      onClick={() => {
+        auth.signout(() => history.push("/"));
+      }}
+    >
+      Sign out
+    </Button>
+  ) : (
+    null
+  );
+};
+
+function PrivateRoute({ children, ...rest }) {
+  let auth = useAuth();
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        auth.user ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
   );
 };
 

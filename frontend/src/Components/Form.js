@@ -7,12 +7,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Slider,
   TextField,
   Typography
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { gql, useMutation } from '@apollo/client';
+
+import { FormButton, StyledSlider, TitleText } from './StyledComponents';
 
 /*
   Styles
@@ -25,13 +26,6 @@ const HeaderText = withStyles({
   }
 })(Typography);
 
-const TitleText = withStyles({
-  root: {
-    'font-family': "'Alata', sans-serif",
-    'font-size': '2rem'
-  }
-})(Typography);
-
 const SubtitleText = withStyles({
   root: {
     'font-family': "'Alata', sans-serif",
@@ -39,29 +33,6 @@ const SubtitleText = withStyles({
     'color': 'lightgrey',
   }
 })(Typography);
-
-const StyledSlider = withStyles({
-  root: {
-    'margin-top': '40px'
-  },
-  markLabel: {
-    'font-family': "'Alata', sans-serif",
-    'font-size': '1.5rem'
-  },
-  valueLabel: {
-    'font-family': "'Alata', sans-serif",
-    'font-size': '1rem'
-  }
-})(Slider);
-
-const StyledButton = withStyles({
-  root: {
-    'display': 'block',
-    'font-size': '1.4rem',
-    'margin': '40px auto 0px',
-    'padding': '20px 80px'
-  }
-})(Button);
 
 /*
   GraphQL
@@ -149,7 +120,7 @@ export default function Form(){
         break;
       default:
         console.log('ERROR: No input given!');
-    }
+    };
   };
 
   const handleSubmit = (event) => {
@@ -169,7 +140,7 @@ export default function Form(){
   };
 
   return(
-    <Container style={{marginTop: '40px'}}>
+    <Container>
       <TitleText>I would like some feedback from you <span role="img" aria-label="">&#129488;</span></TitleText>
       <SubtitleText>Your submission will be completely anonymous as honest feedback is the goal <span role="img" aria-label="">&#129323;</span></SubtitleText>
       <form onSubmit={handleSubmit}>
@@ -196,7 +167,7 @@ export default function Form(){
           multiline
           onChange={handleTextChange}/>
         <div>
-          <StyledButton type="submit" color="primary" variant="contained">Submit</StyledButton>
+          <FormButton type="submit" color="primary" variant="contained">Submit</FormButton>
         </div>
       </form>
       <Dialog open={open} onClose={closeDialog}>

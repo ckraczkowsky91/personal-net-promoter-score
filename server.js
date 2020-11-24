@@ -4,7 +4,7 @@ var { graphqlHTTP } = require('express-graphql');
 var express = require('express');
 var mongoose = require('mongoose');
 
-const { Submission } = require('./models');
+const { Submission, User } = require('./models');
 
 mongoose.connect('mongodb://localhost:27017/net_promoter_score', {
   useNewUrlParser: true,
@@ -16,6 +16,7 @@ app.use(cors());
 
 const {
   buildSchema,
+  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLInputObjectType,
@@ -44,20 +45,38 @@ var SubmissionType = new GraphQLObjectType({
   }
 });
 
-var queryType = new GraphQLObjectType({
-  name: 'getAllSubmissions',
+var UserType = new GraphQLObjectType({
+  name: 'UserType',
   fields: {
-    submissions: {
+    username: {
+      type: GraphQLString
+    },
+    password: {
+      type: GraphQLString
+    }
+  }
+});
+
+var queryType = new GraphQLObjectType({
+  name: 'RootQueryType',
+  fields: {
+    getAllSubmissions: {
       type: GraphQLList(SubmissionType),
       resolve: () => {
         return Submission.find()
+      }
+    },
+    getAllUsers: {
+      type: GraphQLList(UserType),
+      resolve: () => {
+        return User.find()
       }
     }
   }
 });
 
 var mutationType = new GraphQLObjectType({
-  name: 'Mutation',
+  name: 'RootMutationType',
   fields: {
     createSubmission: {
       type: SubmissionType,
@@ -79,6 +98,49 @@ var mutationType = new GraphQLObjectType({
           weakness: args.weakness
         });
         return newSubmission.save();
+      }
+    },
+    createUser: {
+      type: UserType,
+      args: {
+        username: {
+          type: new GraphQLNonNull(GraphQLString)
+        },
+        password: {
+          type: new GraphQLNonNull(GraphQLString)
+        }
+      },
+      resolve(parent, args){
+        let newUser = new User({
+          username: args.username,
+          password: args.password
+        });
+        return newUser.save();
+      }
+    },
+    authenticateUser: {
+      type: GraphQLBoolean,
+      args: {
+        username: {
+          type: new GraphQLNonNull(GraphQLString)
+        },
+        password: {
+          type: new GraphQLNonNull(GraphQLString)
+        }
+      },
+      resolve(parent, args){
+        return User.findOne({username: args.username, password: args.password})
+        .then((user) => {
+          if(user){
+            return true;
+          } else {
+            return false;
+          };
+        })
+        .catch((error) => {
+          console.log('ERROR: ', error);
+          return false;
+        });
       }
     }
   }

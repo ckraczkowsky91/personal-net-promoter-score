@@ -14,6 +14,14 @@ const submissionSchema = new mongoose.Schema(
   }
 );
 
-const Submission = mongoose.model('Submission', submissionSchema);
+const userSchema = new mongoose.Schema(
+  {
+    username: String,
+    password: String
+  }
+);
 
-module.exports = { Submission };
+const Submission = mongoose.model('Submission', submissionSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = { Submission, User };

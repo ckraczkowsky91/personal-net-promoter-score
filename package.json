@@ -1,6 +1,6 @@
 {
   "name": "personal-net-promoter-score",
-  "description": "A Node.js application running a GraphQL/Express API server and a React.js frontend using the Material-UI library."
+  "description": "A Node.js application running a GraphQL/Express API server and a React.js frontend using the Material-UI library.",
   "version": "0.1.0",
   "scripts": {
     "start": "react-scripts start"
