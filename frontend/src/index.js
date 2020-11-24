@@ -24,6 +24,7 @@ import Login from './Components/Login';
 import { authContext, useAuth } from './Components/utils';
 
 const url = process.env.GRAPHQL_URI || 'http://localhost:4000/graphql';
+console.log(process.env);
 console.log(url);
 const apolloClient = new ApolloClient({
   uri: url,
