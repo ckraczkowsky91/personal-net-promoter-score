@@ -16,14 +16,18 @@ import {
   Toolbar
 } from '@material-ui/core';
 import { ChatBubble as HomeIcon } from '@material-ui/icons';
+import path from 'path'
 
 import Form from './Components/Form';
 import Admin from './Components/Admin';
 import Login from './Components/Login';
 import { authContext, useAuth } from './Components/utils';
 
+const url = 'http://localhost:4000/graphql';
+// const url = `/graphql`;
+console.log(url);
 const apolloClient = new ApolloClient({
-  uri: 'http://localhost:4001/graphql',
+  uri: url,
   cache: new InMemoryCache()
 });
 

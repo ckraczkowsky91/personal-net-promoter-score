@@ -2,16 +2,22 @@ var cors = require('cors');
 var graphql = require('graphql');
 var { graphqlHTTP } = require('express-graphql');
 var express = require('express');
+var path = require('path');
 var mongoose = require('mongoose');
 
 const { Submission, User } = require('./models');
 
-mongoose.connect('mongodb://localhost:27017/net_promoter_score', {
+const app = express();
+const port = process.env.PORT || 4000;
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017/net_promoter_score';
+
+mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
-var app = express();
+// tell Express where to find static content i.e. HTML files, stylesheets, and images
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.use(cors());
 
 const {
@@ -154,4 +160,4 @@ app.use('/graphql',
     graphiql: true
   })
 );
-app.listen(4001);
+app.listen(port);
