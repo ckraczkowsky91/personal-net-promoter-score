@@ -19,17 +19,6 @@ mongoose.connect(url, {
 // tell Express where to find static content i.e. HTML files, stylesheets, and images
 // app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.use(cors());
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("frontend/build"));
-  app.get("/*", function(req, res) {
-    res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-  });
-} else {
-  app.use(express.static(path.join(__dirname, "/frontend/public")));
-  app.get("/*", function(req, res) {
-    res.sendFile(path.join(__dirname, "./frontend/public/index.html"));
-  });
-}
 
 const {
   buildSchema,
@@ -172,5 +161,5 @@ app.use('/graphql',
   })
 );
 app.listen(port, () => {
-  console.log('App running!')
+  console.log(`Express server running on ${port}, GraphQL server running at '${port}/graphql'`)
 });
