@@ -17,7 +17,7 @@ mongoose.connect(url, {
 });
 
 // tell Express where to find static content i.e. HTML files, stylesheets, and images
-// app.use(express.static(path.join(__dirname, 'frontend/build')));
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.use(cors());
 
 const {
