@@ -132,7 +132,10 @@ export default function Form(){
     })
     .then(() => {
       setOpen(true);
-    });
+    })
+    .catch((error) => {
+      console.log('ERROR: ', error);
+    })
   };
 
   const closeDialog = () => {
