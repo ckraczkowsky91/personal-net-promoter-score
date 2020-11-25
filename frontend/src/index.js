@@ -29,14 +29,13 @@ if (process.env.NODE_ENV == "production") {
 } else {
     console.log('poop');
       url = 'http://localhost:4000/graphql';
-}
+};
 
-console.log(process.env);
-console.log(url);
 const apolloClient = new ApolloClient({
   uri: url,
   cache: new InMemoryCache()
 });
+console.log(apolloClient);
 
 /*
   Components
