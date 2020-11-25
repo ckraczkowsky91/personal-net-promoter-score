@@ -24,13 +24,15 @@ import Login from './Components/Login';
 import { authContext, useAuth } from './Components/utils';
 
 var url;
-if (process.env.NODE_ENV == "production") {
-  url = process.env.GRAPHQL_URI;
+if (process.env.NODE_ENV === "production") {
+  console.log('peepee');
+  url = '/graphql';
 } else {
-    console.log('poop');
-      url = 'http://localhost:4000/graphql';
+  console.log('poop');
+  url = 'http://localhost:4000/graphql';
 };
 
+console.log(url)
 const apolloClient = new ApolloClient({
   uri: url,
   cache: new InMemoryCache()
