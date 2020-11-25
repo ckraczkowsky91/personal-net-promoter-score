@@ -45,9 +45,10 @@ console.log(apolloClient);
 
 function App(){
   return(
-    <ApolloProvider client={apolloClient}>
+
       <ProvideAuth>
       <BrowserRouter>
+      <ApolloProvider client={apolloClient}>
       <AppBar color="transparent" position="sticky" style={{boxShadow: 'none'}}>
       <Toolbar>
         <IconButton edge="start" component={Link} to="/">
@@ -70,8 +71,10 @@ function App(){
           <Form />
         </Route>
       </Switch>
+      </ApolloProvider>
       </BrowserRouter>
-</ProvideAuth>
+
+
       <a
         href="https://github.com/ckraczkowsky91"
         style={{
@@ -85,7 +88,7 @@ function App(){
           textDecoration: 'none',
           transform: 'translate(-50%, 0)'
         }}>© Colin Kraczkowsky</a>
-    </ApolloProvider>
+        </ProvideAuth>
   );
 };
 
