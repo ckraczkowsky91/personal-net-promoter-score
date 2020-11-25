@@ -1,6 +1,7 @@
 var cors = require('cors');
 var graphql = require('graphql');
 var { graphqlHTTP } = require('express-graphql');
+var bodyparser = require('body-parser');
 var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
@@ -155,6 +156,7 @@ var mutationType = new GraphQLObjectType({
 var schema = new GraphQLSchema({query: queryType, mutation: mutationType});
 
 app.use('/graphql',
+  bodyparser.json(),
   graphqlHTTP({
     schema: schema,
     graphiql: true
